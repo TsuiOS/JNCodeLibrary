@@ -243,7 +243,7 @@
 }
 
 #pragma mark - 单例类回调
-- (BOOL)handleOpenURL:(NSURL *)url {
++ (BOOL)handleOpenURL:(NSURL *)url {
     
     if ([url.host isEqualToString:@"safepay"])
     {
@@ -251,7 +251,7 @@
         [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
             NSLog(@"result = %@",resultDic);
             NSLog(@"openURL : 支付宝回调 ： result = %@",resultDic);
-            [self aliPayResult:resultDic];
+            [[self sharedPayManager]aliPayResult:resultDic];
         }];
         // 授权跳转支付宝钱包进行支付，处理支付结果
         [[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
@@ -272,10 +272,11 @@
         }];
         
         return [url.host isEqualToString:@"safepay"];
-    }
-    else
-    {
-        return [WXApi handleOpenURL:url delegate:self];
+    }else if ([url.host isEqualToString:@"pay"]){ // 微信支付
+        return [WXApi handleOpenURL:url delegate:[self sharedPayManager]];
+    }else{
+        
+        return NO;
     }
     
 }

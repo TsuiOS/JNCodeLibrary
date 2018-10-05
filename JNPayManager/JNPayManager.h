@@ -69,5 +69,5 @@ typedef NS_ENUM(NSInteger, JNPayCode) {
 - (void)ALIAuth_V2WithInfo:(NSString *)infoStr
                       success:(void(^)(void))successBlock
                       failure:(void(^)(void))failureBolck;
-
++ (BOOL)handleOpenURL:(NSURL *)url;
 @end
